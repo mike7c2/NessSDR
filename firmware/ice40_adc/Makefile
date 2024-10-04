@@ -15,6 +15,7 @@ VHDL_SOURCES = \
 	$(wildcard bram/*.vhdl) \
 	$(wildcard deser/*.vhdl) \
 	$(wildcard adder/*.vhdl) \
+	$(wildcard nco/*.vhdl) \
 	$(wildcard adc/*.vhdl) \
 	$(wildcard lutfir/*.vhdl) \
 	$(TOP_LEVEL).vhdl

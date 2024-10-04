@@ -9,4 +9,10 @@ adder:
 lutfir:
 	$(MAKE) -C lutfir/
 
-.PHONY: pipeline adder lutfir
+nco:
+	$(MAKE) -C nco/
+
+multiplier:
+	$(MAKE) -C multiplier/
+
+.PHONY: pipeline adder lutfir nco multiplier
