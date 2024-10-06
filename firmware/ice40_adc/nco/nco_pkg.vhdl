@@ -14,11 +14,11 @@ PACKAGE NCOPkg IS
             rst : in std_logic;
     
             phase : in std_logic_vector(LUT_DEPTH+1 downto 0);
-            sample_en : in std_logic;
+            di_strobe : in std_logic;
     
-            i_out : out std_logic_vector(LUT_WIDTH downto 0);
-            q_out : out std_logic_vector(LUT_WIDTH downto 0);
-            out_strobe : out std_logic;
+            data_out : out std_logic_vector(LUT_WIDTH downto 0);
+            out_i_strobe : out std_logic;
+            out_q_strobe : out std_logic;
     
             lut_wr_clk : in std_logic;
             lut_wr_en : in std_logic;

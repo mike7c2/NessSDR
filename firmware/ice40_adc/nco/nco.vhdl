@@ -14,11 +14,11 @@ entity NCO is
         rst : in std_logic;
 
         phase : in std_logic_vector(LUT_DEPTH+1 downto 0);
-        sample_en : in std_logic;
+        di_strobe : in std_logic;
 
-        i_out : out std_logic_vector(LUT_WIDTH downto 0);
-        q_out : out std_logic_vector(LUT_WIDTH downto 0);
-        out_strobe : out std_logic;
+        data_out : out std_logic_vector(LUT_WIDTH downto 0);
+        out_i_strobe : out std_logic;
+        out_q_strobe : out std_logic;
 
         lut_wr_clk : in std_logic;
         lut_wr_en : in std_logic;
@@ -41,7 +41,6 @@ architecture Behavioral of NCO is
     signal quadrant_p3 : std_logic_vector(1 downto 0);
     signal i_p1 : std_logic_vector(LUT_WIDTH-1 downto 0);
     signal i_p2 : std_logic_vector(LUT_WIDTH downto 0);
-    signal i_p3 : std_logic_vector(LUT_WIDTH downto 0);
     signal q_p2 : std_logic_vector(LUT_WIDTH-1 downto 0);
     signal q_p3 : std_logic_vector(LUT_WIDTH downto 0);
 begin
@@ -76,7 +75,7 @@ begin
             quadrant_p2 <= (others => '0');
             quadrant_p3 <= (others => '0');
         elsif rising_edge(clk) then
-            process_pipeline <= process_pipeline(process_pipeline'left-1 downto 0) & sample_en;
+            process_pipeline <= process_pipeline(process_pipeline'left-1 downto 0) & di_strobe;
             phase_p0 <= phase(phase'left - 2 downto 0);
             phase_p1 <= phase_p0;
             quadrant_p0 <= phase(phase'left downto phase'left - 1);
@@ -125,7 +124,6 @@ begin
         if rst = '1' then
             i_p1 <= (others => '0');
             i_p2 <= (others => '0');
-            i_p3 <= (others => '0');
             q_p2 <= (others => '0');
             q_p3 <= (others => '0');
         elsif rising_edge(clk) then
@@ -141,9 +139,7 @@ begin
                     i_p2 <= "0" & i_p1;
                 end if;
             end if;
-            if process_pipeline(4) = '1' then
-                i_p3 <= i_p2;
-    
+            if process_pipeline(4) = '1' then    
                 if quadrant_p3 = "01" or quadrant_p3 = "10" then
                     q_p3 <= std_logic_vector(-signed("0" & q_p2));
                 else
@@ -156,16 +152,19 @@ begin
     process(clk, rst)
     begin
         if rst = '1' then
-            i_out <= (others => '0');
-            q_out <= (others => '0');
-            out_strobe <= '0';
+            data_out <= (others => '0');
+            out_i_strobe <= '0';
+            out_q_strobe <= '0';
         elsif rising_edge(clk) then
+            out_i_strobe <= '0';
+            out_q_strobe <= '0';
+
             if process_pipeline(4) = '1' then
-                i_out <= i_p3;
-                q_out <= q_p3;
-                out_strobe <= '1';
-            else
-                out_strobe <= '0';
+                data_out <= i_p2;
+                out_i_strobe <= '1';
+            elsif process_pipeline(5) = '1' then
+                data_out <= q_p3;
+                out_q_strobe <= '1';
             end if;
         end if;
     end process;

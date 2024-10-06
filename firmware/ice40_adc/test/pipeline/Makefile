@@ -5,7 +5,32 @@ SIM ?= ghdl
 SIM_ARGS ?= --vcd=waveform.vcd
 TOPLEVEL_LANG ?= vhdl
 #
-VHDL_SOURCES += ../../deser/deser.vhdl ../../deser/deser_pkg.vhdl ../../adc/adc.vhdl ../../adder/adder_pkg.vhdl ../../adder/pipelined_adder.vhdl ../../adc/adc_pkg.vhdl test_harness.vhdl ../../lutfir/lutfir.vhdl ../../lutfir/lutfir_pkg.vhdl ../../utilities/utilities.vhdl ../../bram/bram_pkg.vhdl ../../bram/bram.vhdl
+VHDL_SOURCES += ../../deser/deser.vhdl
+VHDL_SOURCES += ../../deser/deser_pkg.vhdl
+VHDL_SOURCES += ../../adc/adc.vhdl
+VHDL_SOURCES += ../../adder/adder_pkg.vhdl
+VHDL_SOURCES += ../../adder/pipelined_adder.vhdl
+VHDL_SOURCES += ../../adc/adc_pkg.vhdl test_harness.vhdl
+VHDL_SOURCES += ../../lutfir/lutfir.vhdl
+VHDL_SOURCES += ../../lutfir/lutfir_pkg.vhdl
+VHDL_SOURCES += ../../utilities/utilities.vhdl
+VHDL_SOURCES += ../../bram/bram_pkg.vhdl
+VHDL_SOURCES += ../../bram/bram.vhdl
+VHDL_SOURCES += ../../nco/nco_pkg.vhdl
+VHDL_SOURCES += ../../nco/nco.vhdl
+VHDL_SOURCES += ../../multiplier/multiplier_pkg.vhdl
+VHDL_SOURCES += ../../multiplier/pipelined_multiplier.vhdl
+
+
+
+
+
+
+
+
+
+
+
 #
 ## TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file
 TOPLEVEL = test_harness
