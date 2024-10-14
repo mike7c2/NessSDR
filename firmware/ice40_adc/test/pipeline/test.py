@@ -42,6 +42,41 @@ class ModulatorFixture:
             self.dut.lut_wr_clk.value = 1
             await Timer(1, units="ns")
 
+            self.dut.lut_wr_en.value = 0
+
+            self.dut.lut_wr_clk.value = 0
+            await Timer(1, units="ns")
+            self.dut.lut_wr_clk.value = 1
+            await Timer(1, units="ns")
+
+    async def program_nco_lut(self, data):
+
+        for i in range(len(data)):
+            self.dut.lut_wr_addr.value = i
+            self.dut.lut_wr_data.value = int(data[i])
+            self.dut.nco_lut_wr_en.value = 1
+
+            self.dut.lut_wr_clk.value = 0
+            await Timer(1, units="ns")
+            self.dut.lut_wr_clk.value = 1
+            await Timer(1, units="ns")
+
+            self.dut.nco_lut_wr_en.value = 0
+
+            self.dut.lut_wr_clk.value = 0
+            await Timer(1, units="ns")
+            self.dut.lut_wr_clk.value = 1
+            await Timer(1, units="ns")
+
+async def clock(dut):
+    dut.adc_clk.value = 0
+    dut.if_proc_clk.value = 0
+    dut.bb_proc_clk.value = 0
+    await Timer(1, units="ns")
+    dut.adc_clk.value = 1
+    dut.if_proc_clk.value = 1
+    dut.bb_proc_clk.value = 1
+    await Timer(1, units="ns")
 
 @cocotb.test()
 async def modulator(dut):
@@ -83,6 +118,11 @@ async def modulator(dut):
 
     await modulator_fixture.program_lut(lut_data)
 
+
+    nco_lut_data = np.sin(np.linspace(0,np.pi/2, 1024)) * (2**16)-1
+    await modulator_fixture.program_nco_lut(nco_lut_data)
+
+
     for i in range(n_samples//2):
         signal_voltages[i*2] = modulator_fixture.signal[modulator_fixture.signal_idx]
         signal_voltages[i*2+1] = modulator_fixture.signal[modulator_fixture.signal_idx+1]
@@ -97,7 +137,7 @@ async def modulator(dut):
                     output_bits[output_bits_idx] = 0
                 output_bits_idx += 1
             #print(dut.adc_do.value)
-        n_bits = 12
+        n_bits = 16
         if dut.dc_data_strobe.value == 1:
              
             unsigned_value = int(dut.dc_data_out.value)
@@ -108,10 +148,7 @@ async def modulator(dut):
             output_filtered[output_filtered_idx]
             output_filtered_idx += 1
 
-        dut.clk.value = 0
-        await Timer(1, units="ns")
-        dut.clk.value = 1
-        await Timer(1, units="ns")
+        await clock(dut)
 
     fig, ax = plt.subplots(5,2)
 

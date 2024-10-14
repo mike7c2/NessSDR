@@ -5,8 +5,10 @@ SIM ?= ghdl
 SIM_ARGS ?= --vcd=waveform.vcd
 TOPLEVEL_LANG ?= vhdl
 #
-VHDL_SOURCES += ../../deser/deser.vhdl
-VHDL_SOURCES += ../../deser/deser_pkg.vhdl
+VHDL_SOURCES += ../../rebuffer/rebuffer_pkg.vhdl
+VHDL_SOURCES += ../../rebuffer/rebuffer.vhdl
+VHDL_SOURCES += ../../delay/delay_pkg.vhdl
+VHDL_SOURCES += ../../delay/delay.vhdl
 VHDL_SOURCES += ../../adc/adc.vhdl
 VHDL_SOURCES += ../../adder/adder_pkg.vhdl
 VHDL_SOURCES += ../../adder/pipelined_adder.vhdl
@@ -20,20 +22,11 @@ VHDL_SOURCES += ../../nco/nco_pkg.vhdl
 VHDL_SOURCES += ../../nco/nco.vhdl
 VHDL_SOURCES += ../../multiplier/multiplier_pkg.vhdl
 VHDL_SOURCES += ../../multiplier/pipelined_multiplier.vhdl
-
-
-
-
-
-
-
-
-
-
+VHDL_SOURCES += ../../pipeline.vhdl
 
 #
 ## TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file
-TOPLEVEL = test_harness
+TOPLEVEL = pipeline
 #
 ## MODULE is the basename of the Python test file
 MODULE = test

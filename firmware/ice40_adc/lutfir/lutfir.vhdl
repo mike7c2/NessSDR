@@ -46,7 +46,7 @@ architecture Behavioral of LutFIR is
 begin
 
     brams: for i in 0 to N_LUTS-1 generate
-        ram_wr_enables(i) <= '1' when unsigned(lut_wr_addr(LUT_DEPTH + LUTS_POW - 1 downto LUT_DEPTH)) = i else '0';
+        ram_wr_enables(i) <= '1' when unsigned(lut_wr_addr(LUT_DEPTH + LUTS_POW - 1 downto LUT_DEPTH)) = i and lut_wr_en = '1' else '0';
 
         bramx: BRAM
         generic map (

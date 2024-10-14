@@ -1,4 +1,5 @@
-
+delay:
+	$(MAKE) -C delay/
 
 pipeline:
 	$(MAKE) -C pipeline/
@@ -15,4 +16,4 @@ nco:
 multiplier:
 	$(MAKE) -C multiplier/
 
-.PHONY: pipeline adder lutfir nco multiplier
+.PHONY: pipeline adder lutfir nco multiplier delay
