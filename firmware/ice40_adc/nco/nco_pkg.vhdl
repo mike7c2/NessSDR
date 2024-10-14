@@ -7,7 +7,7 @@ PACKAGE NCOPkg IS
     component NCO is
         generic (
             LUT_WIDTH : integer := 16;
-            LUT_DEPTH : integer := 10
+            LUT_DEPTH : integer := 2
         );
         port (
             clk : in std_logic;

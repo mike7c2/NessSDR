@@ -39,6 +39,7 @@ architecture Behavioral of NCO is
     signal quadrant_p1 : std_logic_vector(1 downto 0);
     signal quadrant_p2 : std_logic_vector(1 downto 0);
     signal quadrant_p3 : std_logic_vector(1 downto 0);
+    signal quadrant_p4 : std_logic_vector(1 downto 0);
     signal i_p1 : std_logic_vector(LUT_WIDTH-1 downto 0);
     signal i_p2 : std_logic_vector(LUT_WIDTH downto 0);
     signal q_p2 : std_logic_vector(LUT_WIDTH-1 downto 0);
@@ -74,6 +75,7 @@ begin
             quadrant_p1 <= (others => '0');
             quadrant_p2 <= (others => '0');
             quadrant_p3 <= (others => '0');
+            quadrant_p4 <= (others => '0');
         elsif rising_edge(clk) then
             process_pipeline <= process_pipeline(process_pipeline'left-1 downto 0) & di_strobe;
             phase_p0 <= phase(phase'left - 2 downto 0);
@@ -82,6 +84,7 @@ begin
             quadrant_p1 <= quadrant_p0;
             quadrant_p2 <= quadrant_p1;
             quadrant_p3 <= quadrant_p2;
+            quadrant_p4 <= quadrant_p3;
 
         end if;
     end process;
@@ -106,13 +109,13 @@ begin
                 ram_rd_en <= '1';
             elsif process_pipeline(1) = '1' then
                 if quadrant_p1 = "00" then
-                    lut_addr <= std_logic_vector((2**LUT_DEPTH - 1) - unsigned(phase_p0));
+                    lut_addr <= std_logic_vector((2**LUT_DEPTH - 1) - unsigned(phase_p1));
                 elsif quadrant_p1 = "01" then
-                    lut_addr <= phase_p0;
+                    lut_addr <= phase_p1;
                 elsif quadrant_p1 = "10" then
-                    lut_addr <= std_logic_vector((2**LUT_DEPTH - 1) - unsigned(phase_p0));
+                    lut_addr <= std_logic_vector((2**LUT_DEPTH - 1) - unsigned(phase_p1));
                 elsif quadrant_p1 = "11" then
-                    lut_addr <= phase_p0;
+                    lut_addr <= phase_p1;
                 end if;
                 ram_rd_en <= '1';
             end if;
@@ -133,14 +136,14 @@ begin
             if process_pipeline(3) = '1' then
                 q_p2 <= ram_rd_data;
 
-                if quadrant_p2 = "10" or quadrant_p2 = "11" then
+                if quadrant_p3 = "10" or quadrant_p3 = "11" then
                     i_p2 <= std_logic_vector(-signed("0" & i_p1));
                 else
                     i_p2 <= "0" & i_p1;
                 end if;
             end if;
             if process_pipeline(4) = '1' then    
-                if quadrant_p3 = "01" or quadrant_p3 = "10" then
+                if quadrant_p4 = "01" or quadrant_p4 = "10" then
                     q_p3 <= std_logic_vector(-signed("0" & q_p2));
                 else
                     q_p3 <= "0" & q_p2;
