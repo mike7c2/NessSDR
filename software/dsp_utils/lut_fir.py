@@ -77,10 +77,18 @@ class LutFIR:
     def impulse_response(self):
         impulse = np.zeros(self.length()*2)
         impulse[self.length()] = 1
+        impulse[self.length()+1] = -1
 
         response = self.process(impulse)
 
         return response
+
+    def normalise_data(self, data):
+        data /= 2**(self.lut_width-1)
+        print(np.mean(data))
+        return data
+
+
 
     @staticmethod
     def make_lowpass(passband, cutoff, lut_width, lut_bitdepth, n_luts):
@@ -99,6 +107,7 @@ class LutFIR:
 
     @staticmethod
     def make_bandpass(center, passband, cutoff, lut_width, lut_bitdepth, n_luts):
+        print(f"center: {center}, passband: {passband}, cutoff: {cutoff}, lut_width: {lut_width}, lut_bitdepth: {lut_bitdepth}, nluts: {n_luts}")
         num_taps = lut_width*n_luts 
         frequencies = [
             0.0,
@@ -114,12 +123,27 @@ class LutFIR:
 
         return LutFIR(coefficients, lut_width, lut_bitdepth, n_luts)
 
+    @staticmethod
+    def nyquist_params(downconversion, zone, lut_width, lut_bitdepth, n_luts):
+        n_nyzones = downconversion
+        center = (zone / (n_nyzones*2)) + (1 / (downconversion * 4))
+        passband = 1 / (n_nyzones * 8.01)
+        cutoff = 1 / (n_nyzones * 4.01)
+
+        return (center, passband, cutoff, lut_width, lut_bitdepth, n_luts)
+
+    @staticmethod
+    def make_nyquist(downconversion, zone, lut_width, lut_bitdepth, n_luts):
+        params = LutFIR.nyquist_params(downconversion, zone, lut_width, lut_bitdepth, n_luts)
+        return LutFIR.make_bandpass(*params)
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     commands = parser.add_mutually_exclusive_group(required=True)
     commands.add_argument("--bandpass", action="store_true", help="Make a bandpass filter")
     commands.add_argument("--lowpass", action="store_true", help="Make a lowpass filter")
+    commands.add_argument("--nyquist", action="store_true", help="Make a nyquist filter")
     parser.add_argument("--plot", action="store_true", help="Show noise response of filter")
     parser.add_argument("--center", type=float, default=0.25, help="Center frequency for bandpass")
     parser.add_argument("--cutoff", type=float, default=16, help="Cutoff = (fs/2)/cutoff")
@@ -127,6 +151,8 @@ if __name__ == "__main__":
     parser.add_argument("--width", type=int, default=8, help="Address width of LUT")
     parser.add_argument("--word", type=int, default=16, help="Word size of LUT")
     parser.add_argument("--nluts", type=int, default=16, help="Number of luts")
+    parser.add_argument("--downconversion", type=int, default=16, help="Downconversion factor")
+    parser.add_argument("--zone", type=int, default=1, help="Nyquist zone")
     args = parser.parse_args()
 
     l = None
@@ -138,24 +164,37 @@ if __name__ == "__main__":
         l = LutFIR.make_bandpass(args.center, passband_width, cutoff_width, args.width, args.word, args.nluts)
     elif args.lowpass:
         l = LutFIR.make_lowpass(passband_width, cutoff_width, args.width, args.word, args.nluts)
+    elif args.nyquist:
+        l = LutFIR.make_nyquist(args.downconversion, args.zone, args.width, args.word, args.nluts)
 
     if args.plot:
         noise = np.random.normal(0, 1, 100000)
         noise[noise > 0] = 1
         noise[noise < 0] = 0
 
-        data = l.process(noise)
+        data = l.normalise_data(l.process(noise))
+        ir = l.normalise_data(l.impulse_response())
 
-        plt.magnitude_spectrum(noise, scale="dB", label="Noise")
-        plt.magnitude_spectrum(data, scale="dB", label="Response")
+
+        fig, axarr = plt.subplots(1)
+        axarr = [axarr]
+        axarr[0].magnitude_spectrum(noise, scale="dB", label="Noise")
+        axarr[0].magnitude_spectrum(data, scale="dB", label="Response")
+        axarr[0].magnitude_spectrum(ir, scale="dB", label="Impulse response")
 
         if args.lowpass:
-            plt.plot([passband_width, passband_width], [-100, 100], color="green")
-            plt.plot([cutoff_width, cutoff_width], [-100, 100], color="red")
-            plt.plot([cutoff_width*2, cutoff_width*2], [-100, 100], color="red")
-        else:
-            plt.plot([passband_width, passband_width], [-100, 100], color="green")
-            plt.plot([cutoff_width, cutoff_width], [-100, 100], color="red")
-            plt.plot([cutoff_width*2, cutoff_width*2], [-100, 100], color="red")
-        plt.legend()
+            axarr[0].plot([passband_width, passband_width], [-100, 100], color="green")
+            axarr[0].plot([cutoff_width, cutoff_width], [-100, 100], color="red")
+            axarr[0].plot([cutoff_width*2, cutoff_width*2], [-100, 100], color="red")
+        elif args.bandpass:
+            axarr[0].plot([passband_width, passband_width], [-100, 100], color="green")
+            axarr[0].plot([cutoff_width, cutoff_width], [-100, 100], color="red")
+            axarr[0].plot([cutoff_width*2, cutoff_width*2], [-100, 100], color="red")
+        elif args.nyquist:
+            (center, passband, cutoff, lut_width, lut_bitdepth, n_luts) = LutFIR.nyquist_params(args.downconversion, args.zone, args.width, args.word, args.nluts)
+            axarr[0].plot([center*2, center*2], [-100, 100], color="green")
+            axarr[0].plot([(center + passband)*2, (center + passband) * 2], [-100, 100], color="red")
+            axarr[0].plot([(center + cutoff)*2, (center + cutoff) * 2], [-100, 100], color="red")
+
+        axarr[0].legend()
         plt.show()
