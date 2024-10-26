@@ -1,19 +1,8 @@
-delay:
-	$(MAKE) -C delay/
+SUBDIRS := delay pipeline adder lutfir nco multiplier cic spi
 
-pipeline:
-	$(MAKE) -C pipeline/
+.PHONY: $(SUBDIRS)
 
-adder:
-	$(MAKE) -C adder/
+all: $(SUBDIRS)
 
-lutfir:
-	$(MAKE) -C lutfir/
-
-nco:
-	$(MAKE) -C nco/
-
-multiplier:
-	$(MAKE) -C multiplier/
-
-.PHONY: pipeline adder lutfir nco multiplier delay
+$(SUBDIRS):
+	$(MAKE) -C $@
