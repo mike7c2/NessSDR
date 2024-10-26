@@ -25,8 +25,6 @@ architecture Behavioral of Rebuffer is
     signal update_strobe : std_logic;
     signal last_update_strobe : std_logic;
 begin
-    data_out <= buf;
-
     process(in_clk, rst)
     begin
         if rst = '1' then
