@@ -12,7 +12,7 @@ entity hspi_tx is
         clk : in std_logic;
         rst : in std_logic;
 
-        bus_data_out : inout std_logic_vector(WIDTH - 1 downto 0);
+        bus_data_out : out std_logic_vector(WIDTH - 1 downto 0);
 
         htclk : out std_logic;
         htreq : out std_logic;
