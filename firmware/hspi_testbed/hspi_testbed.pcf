@@ -1,0 +1,58 @@
+# example.pcf
+set_io --warn-no-port leds[0] B5
+set_io --warn-no-port leds[1] B4
+set_io --warn-no-port leds[2] A2
+set_io --warn-no-port leds[3] A1
+set_io --warn-no-port leds[4] C5
+set_io --warn-no-port leds[5] C4
+set_io --warn-no-port leds[6] B3
+set_io --warn-no-port leds[7] C3
+
+set_io --warn-no-port clk_12mhz J3
+
+# FTDI
+set_io --warn-no-port ftdi_sclk B10
+set_io --warn-no-port ftdi_mosi B12
+set_io --warn-no-port ftdi_miso B13
+set_io --warn-no-port ftdi_cs A15
+
+set_io --warn-no-port adc_di J1
+set_io --warn-no-port adc_do B2
+
+set_io --warn-no-port noise_out C1
+
+set_io --warn-no-port dbg[0] T13
+set_io --warn-no-port dbg[1] T14
+set_io --warn-no-port dbg[2] N12
+set_io --warn-no-port dbg[3] P13
+set_io --warn-no-port dbg[4] N10
+set_io --warn-no-port dbg[5] M11
+set_io --warn-no-port dbg[6] T11
+set_io --warn-no-port dbg[7] P10
+
+set_io --warn-no-port hspi_data[0] J14
+set_io --warn-no-port hspi_data[1] K14
+set_io --warn-no-port hspi_data[2] F14
+set_io --warn-no-port hspi_data[3] G14
+set_io --warn-no-port hspi_data[4] H14
+set_io --warn-no-port hspi_data[5] J15
+set_io --warn-no-port hspi_data[6] G15
+set_io --warn-no-port hspi_data[7] H16
+set_io --warn-no-port hspi_data[8] F15
+set_io --warn-no-port hspi_data[9] G16
+set_io --warn-no-port hspi_data[10] E14
+set_io --warn-no-port hspi_data[11] F16
+set_io --warn-no-port hspi_data[12] D15
+set_io --warn-no-port hspi_data[13] E16
+set_io --warn-no-port hspi_data[14] D14
+set_io --warn-no-port hspi_data[15] D16
+
+set_io --warn-no-port hspi_htclk P15 
+set_io --warn-no-port hspi_htreq P16 
+set_io --warn-no-port hspi_htrdy M15 
+set_io --warn-no-port hspi_htvld N16 
+
+set_io --warn-no-port hspi_hrclk L16
+set_io --warn-no-port hspi_hract M16
+set_io --warn-no-port hspi_htack K16
+set_io --warn-no-port hspi_hrvld K15

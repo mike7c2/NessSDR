@@ -1,0 +1,31 @@
+# example.pcf
+set_io --warn-no-port leds[0] B5
+set_io --warn-no-port leds[1] B4
+set_io --warn-no-port leds[2] A2
+set_io --warn-no-port leds[3] A1
+set_io --warn-no-port leds[4] C5
+set_io --warn-no-port leds[5] C4
+set_io --warn-no-port leds[6] B3
+set_io --warn-no-port leds[7] C3
+
+set_io --warn-no-port clk_12mhz J3
+
+# FTDI
+set_io --warn-no-port ftdi_sclk B10
+set_io --warn-no-port ftdi_mosi B12
+set_io --warn-no-port ftdi_miso B13
+set_io --warn-no-port ftdi_cs A15
+
+set_io --warn-no-port adc_di J1
+set_io --warn-no-port adc_do B2
+
+set_io --warn-no-port noise_out C1
+
+set_io --warn-no-port dbg[0] C16
+set_io --warn-no-port dbg[1] D16
+set_io --warn-no-port dbg[2] E16
+set_io --warn-no-port dbg[3] F16
+set_io --warn-no-port dbg[4] G16
+set_io --warn-no-port dbg[5] H16
+set_io --warn-no-port dbg[6] J15
+set_io --warn-no-port dbg[7] G14
