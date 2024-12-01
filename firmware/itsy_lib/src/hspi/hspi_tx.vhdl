@@ -34,7 +34,7 @@ architecture Behavioral of hspi_tx is
     signal header : std_logic_vector(31 downto 0);
 
     signal tx_length : std_logic_vector(1 downto 0);
-    signal sequence : std_logic_vector(3 downto 0);
+    signal seq : std_logic_vector(3 downto 0);
 
     signal crc_out : std_logic_vector(15 downto 0);
     signal crc_clr : std_logic;
@@ -49,7 +49,7 @@ begin
     bus_data_out <= bus_data_out_int;
     tx_length <= "00";
 
-    header <= tx_length & sequence & user_field;
+    header <= tx_length & seq & user_field;
 
     crc_16_inst : crc16
     generic map(
@@ -74,7 +74,7 @@ begin
             tx_data_strobe <= '0';
             current_state <= idle;
             tx_cnt <= (others => '0');
-            sequence <= (others => '0');
+            seq <= (others => '0');
         elsif rising_edge(clk) then
             htreq <= '0';
             htvld_int <= '0';
@@ -141,7 +141,7 @@ begin
 
                     bus_data_out_int <= crc_out;
                     current_state <= idle;
-                    sequence <= std_logic_vector(unsigned(sequence) + 1);
+                    seq <= std_logic_vector(unsigned(seq) + 1);
 
                 when others =>
                     current_state <= idle;
