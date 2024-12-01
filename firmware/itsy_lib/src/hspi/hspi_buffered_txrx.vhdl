@@ -14,7 +14,8 @@ entity hspi_buffered_txrx is
     port (
         rst : in std_logic;
 
-        bus_data : inout std_logic_vector(WIDTH - 1 downto 0);
+        bus_data_out : out std_logic_vector(WIDTH - 1 downto 0);
+        bus_data_in : in std_logic_vector(WIDTH - 1 downto 0);
 
         htclk : out std_logic;
         htreq : out std_logic;
@@ -47,13 +48,8 @@ architecture Behavioral of hspi_buffered_txrx is
     signal hspi_rx_strobe : std_logic;
     signal hspi_rx_data : std_logic_vector(WIDTH - 1 downto 0);
 
-    signal bus_data_out : std_logic_vector(WIDTH - 1 downto 0);
-    signal bus_data_in : std_logic_vector(WIDTH - 1 downto 0);
-    signal bus_data_int : std_logic_vector(WIDTH - 1 downto 0);
 begin
 
-    bus_data <= bus_data_out;
-    bus_data_in <= bus_data;
 
     tx_fifo_not_empty <= not tx_fifo_empty;
 

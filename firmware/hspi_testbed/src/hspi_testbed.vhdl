@@ -85,7 +85,8 @@ begin
     port map(
         rst => rst,
 
-        bus_data => hspi_data,
+        bus_data_out => hspi_data,
+        bus_data_in => hspi_data,
 
         htclk => hspi_htclk,
         htreq => hspi_htreq,

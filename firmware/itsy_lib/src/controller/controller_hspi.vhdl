@@ -76,7 +76,8 @@ begin
     port map(
         rst => rst,
 
-        bus_data => bus_data,
+        bus_data_out => bus_data,
+        bus_data_in => bus_data,
 
         htclk => htclk,
         htreq => htreq,

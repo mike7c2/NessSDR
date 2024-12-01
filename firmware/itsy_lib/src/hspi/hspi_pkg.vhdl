@@ -14,7 +14,8 @@ package hspi_pkg is
         port (
             rst : in std_logic;
 
-            bus_data : inout std_logic_vector(WIDTH - 1 downto 0);
+            bus_data_out : out std_logic_vector(WIDTH - 1 downto 0);
+            bus_data_in : in std_logic_vector(WIDTH - 1 downto 0);
 
             htclk : out std_logic;
             htreq : out std_logic;
